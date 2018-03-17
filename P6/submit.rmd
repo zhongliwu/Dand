@@ -1,0 +1,335 @@
+红酒质量数据集探索 by Laurence Wu
+========================================================
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+# Load all of the packages that you end up using in your analysis in this code
+# chunk.
+
+# Notice that the parameter "echo" was set to FALSE for this code chunk. This
+# prevents the code from displaying in the knitted HTML output. You should set
+# echo=FALSE for all code chunks in your file, unless it makes sense for your
+# report to show the code that generated a particular plot.
+
+# The other parameters for "message" and "warning" should also be set to FALSE
+# for other code chunks once you have verified that each plot comes out as you
+# want it to. This will clean up the flow of your report.
+
+library(ggplot2)
+library(dplyr)
+library(gridExtra)
+library(GGally)
+library(ggpubr)
+library(corrplot)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Load_the_Data}
+# Load the Data
+wine_df <- read.csv("./wineQualityReds.csv")
+wine_tbl = tbl_df(wine_df)
+```
+
+> **关于此数据集: ** 该数据集是关于多种红酒成分和质量的数据集。对于每一种红酒，
+该数据集提供了红酒的成分（比如含糖量、pH值等），以及红酒品酒专家给此种红酒品质的
+打分。在这份报告中，我将探索这份数据集中不同变量之间的关系。
+
+
+# Univariate Plots Section
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Univariate_Plots}
+glimpse(wine_tbl)
+```
+
+对于该数据集，我看到其中有13个变量，同时有1,599条记录。其中，X变量标识了每一条
+不同的记录，和红酒的质量以及其他数据没有任何关系，因此没有统计学上的意义。
+在这份报告之后的数据集中，我将去掉这个变量。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Reform-the-Data}
+wine_data <- select(wine_tbl, -X)
+summary(wine_data)
+```
+
+上图列出了每一个变量的分布。我可以看到，红酒基本都是酸性(最大pH为4.010)。
+除了density, pH, alcohol, quality这几个变量之外，其他变量都有outlier。
+
+下面，我会画出每一个变量的histogram，以观察每一个变量的分布。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-fixed.acidity}
+ggplot(data = wine_data, aes(x = fixed.acidity)) +
+    geom_histogram(binwidth = 0.3) +
+    xlab('fixed acidity')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-volatile.acidity}
+ggplot(data = wine_data, aes(x = volatile.acidity)) +
+    geom_histogram(binwidth = 0.03) +
+    xlab('volatile acidity')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-citric.acid}
+ggplot(data = wine_data, aes(x = citric.acid)) +
+    geom_histogram(binwidth = 0.02) +
+    xlab('citric acid')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-residual.sugar}
+ggplot(data = wine_data, aes(x = residual.sugar)) + 
+    geom_histogram(binwidth = 0.5) + 
+    xlab('residual sugar')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-chlorides}
+ggplot(data = wine_data, aes(x = chlorides)) + 
+    geom_histogram(binwidth = 0.01) + 
+    xlab('chlorides')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-free.sulfur.dioxide}
+ggplot(data = wine_data, aes(x = free.sulfur.dioxide)) + 
+    geom_histogram(binwidth = 1) + 
+    xlab('free sulfur dioxide')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-total.sulfur.dioxide}
+ggplot(data = wine_data, aes(x = total.sulfur.dioxide)) + 
+    geom_histogram(binwidth = 5) + 
+    xlab('total sulfur dioxide')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-density}
+ggplot(data = wine_data, aes(x = density)) + 
+    geom_histogram(binwidth = 0.0003) + 
+    xlab('density')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-pH}
+ggplot(data = wine_data, aes(x = pH)) + 
+    geom_histogram(binwidth = 0.03) + 
+    xlab('pH')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-sulphates}
+ggplot(data = wine_data, aes(x = sulphates)) + 
+    geom_histogram(binwidth = 0.05) + 
+    xlab('sulphates')
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-alcohol}
+ggplot(data = wine_data, aes(x = alcohol)) + 
+    geom_histogram(binwidth = 0.1) + 
+    xlab('alcohol')
+```
+
+
+# Univariate Analysis
+
+### What is the structure of your dataset?
+该数据集包含了12个有统计意义的变量，以及一个用来标识每一条不同记录的ID变量。
+我感兴趣的变量主要是12个有统计意义的变量。
+
+### What is/are the main feature(s) of interest in your dataset?
+对于这份数据集，我对于什么样的成分影响了红酒质量比较感兴趣。因此，我选择了
+fixed acidity, volatile acidity, citric acid, residual sugar, 
+chlorides and alcohol这五个变量作为主要研究对象。
+
+### What other features in the dataset do you think will help support your investigation into your feature(s) of interest?
+对于剩余的变量，free sulfur dioxide, total sulfur dioxide, pH, density and  
+sulphates，我也会研究他们。我想这对于发现红酒质量受什么样的因素影响也很重要。
+
+### Did you create any new variables from existing variables in the dataset?
+在这个点上，我目前没有发现需要创建新变量的必要。如果之后有必要
+（对探索数据有影响），我会创建新的变量。
+
+### Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?
+数据集中有许多左偏的变量，alcohol, sulphates, total.sulfur.dioxide
+and free.sulfur.dioxide这些变量的分布均呈现左偏状态。
+
+# Bivariate Plots Section
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plots}
+corr_main <- cor(select(wine_data, fixed.acidity, volatile.acidity, citric.acid, 
+                   residual.sugar, chlorides, alcohol, quality), 
+            method='pearson')
+corrplot(corr = corr_main, type = 'lower', method = 'circle', 
+         order = 'alphabet', addCoef.col = "black", tl.srt = 15,
+         tl.col = 'black')
+```
+
+P(2 - 1), 主要研究变量和quality之间的相关性系数（使用Pearson相关性系数)。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE} 
+cor_rest <- cor(select(wine_data, free.sulfur.dioxide, total.sulfur.dioxide, 
+                   density, pH, quality), method='pearson')
+corrplot(corr = cor_rest, type = 'lower', method = 'circle', 
+         order = 'hclust', addCoef.col = "black", tl.srt = 15,
+         tl.col = 'black')
+```
+
+P(2 - 2), 其他变量和quality之间的相关性系数（使用Pearson相关性系数)。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+corr_free <- cor(select(wine_data, -quality), method='pearson')
+corrplot(corr = corr_free, type = 'lower', method = 'circle', 
+         tl.col = 'black', tl.srt = 15)
+```
+
+P(2 - 3), 除了红酒质量之外，其他所有变量之间的Pearson相关系数。
+
+
+# Bivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?
+
+就相关性系数表格上看，我只能看到alcohol和quality之间有较大的相关性（0.48）。
+而citric.acid和quality也呈现一定的关系，但是不大（0.23）。另外看起来，
+其他变量和quality之间似乎没有多大的相关性（相关性系数小于0.3）。
+
+而从P(2 - 3)中可以看到，pH, density and citric.acid这三个变量和fixed.acidity之间
+似乎有较强的相关性。
+
+
+alcohol变量和红酒质量的关系：
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = wine_data, aes(x = alcohol, y = quality)) +
+  geom_jitter(alpha = 1 / 3) +
+  geom_smooth()
+```
+
+P(2 - 4) 酒精含量与红酒质量之间的关系
+
+由此图可以看出,在酒精含量小于13的时候，酒精含量越高，红酒的质量越好。但是在酒精
+含量大于13的时候，红酒的质量反而下降了。这也许是由于酒精含量过于大的关系。
+
+
+探索citric.acid和红酒质量之间的关系。
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = wine_data, aes(x = citric.acid, y = quality)) +
+  geom_jitter(alpha = 1 / 3) +
+  geom_smooth()
+```
+
+P(2 - 5) 柠檬酸含量和红酒质量之间的关系
+
+此图可以看出，在柠檬酸含量为0.25 - 0.5之间，和红酒质量有一定的正相关关系。但是
+除此之外，并没有非常强的相关性。
+
+
+### Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?
+
+变量free.sulfur.dioxide和total.sulfur.dioxide有较强的相关性。我认为，由于
+total.sulfur.dioxide和free.sulfur.dioxide都是同一类化学物质，因此这样的关系也在
+清理之中。
+
+### What was the strongest relationship you found?
+
+根据三幅相关性变量的图，我主要探索了pH，density和citric.acid这三个变量
+同fixed.acidity这个变量之间的关系，我在下面进行了Pearson's correlation test。
+
+变量pH和fixed.acidity之间的Pearson's correlation test。
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+corr_pH_fixed <- cor.test(wine_data$pH, wine_data$fixed.acidity)
+corr_pH_fixed
+```
+
+变量density和fixed.acidity之间的Pearson's correlation test。
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+corr_dens_fixed <- cor.test(wine_data$density, wine_data$fixed.acidity)
+corr_dens_fixed
+```
+
+变量citric.acid和fixed.acidity之间的Pearson's correlation test。
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+corr_citric_fixed <- cor.test(wine_data$citric.acid, wine_data$fixed.acidity)
+corr_citric_fixed
+```
+
+从上图中可以看到，pH和fixed.acidity之间的相关性最强，绝对值为0.683。他们实际呈
+负线性相关，Pearson's correlation coefficient为-0.683。
+
+# Multivariate Plots Section
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plots}
+fixed_acidity_color = (wine_data$fixed.acidity - min(wine_data$fixed.acidity)) / 
+    (max(wine_data$fixed.acidity) - min(wine_data$fixed.acidity)) * 255
+
+ggplot(data = wine_data, 
+       aes(x = pH, y = density, color = fixed_acidity_color)) + 
+  geom_jitter(alpha = 0.8)
+```
+
+P(3 -1) pH, fixed.acidity和citric.acid之间的关系。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+quality_n <- factor(wine_data$quality)
+ggplot(data = wine_data,aes(x = alcohol, y = citric.acid, color = quality_n)) + 
+  geom_point(position = position_jitter(0.05), alpha = 1 / 2)
+```
+
+P(3 -2) citric, alcohol和quality之间的关系。
+
+
+# Multivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
+
+从P(3 - 1)中可以看出，pH和density之间的关联不大，但是density和fixed.acidity
+以及pH和fixed.acidity都呈现了负相关的关系。
+
+从P(3 - 2)中可以看出，酒精质量较差的酒大部分集中在图的左下角，
+大部分的alcohol < 10，citric.acid < 0.25。同时，从纵轴上看，citric.acid和
+酒精质量关系并不大，因为各种质量的点在纵轴上均有分布。不过，确实酒精质量较差的点
+在纵轴的底部分布较多。
+
+### Were there any interesting or surprising interactions between features?
+
+从P(3 - 1)中可以看出，尽管density和pH之间几乎没有任何相关性，但是数据大部分
+集中在图中间部分。由此可以看出，大部分红酒的pH和density几乎都是类似的。
+
+
+# Final Plots and Summary
+
+### Plot One
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_One}
+ggplot(data = wine_data, aes(x = alcohol, y = quality)) +
+  geom_jitter(alpha = 1 / 3) +
+  geom_smooth()
+```
+
+### Description One
+图一，主要描述了alcohol对于酒精质量的影响。可以看出两者呈现出正相关。
+
+
+### Plot Two
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Two}
+corr_free <- cor(select(wine_data, -quality), method='pearson')
+corrplot(corr = corr_free, type = 'lower', method = 'circle', 
+         tl.col = 'black', tl.srt = 15)
+```
+
+### Description Two
+图二，描述了除了quality这个Output变量之外，其他自变量的相关性关系。可以看出，
+pH - fixed.acidity, density - fixed.acidity, citric.acid - fixed.acidity这三组
+变量之间的关系最大。
+
+### Plot Three
+```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Three}
+quality_n <- factor(wine_data$quality)
+ggplot(data = wine_data,aes(x = alcohol, y = citric.acid, color = quality_n)) + 
+  geom_point(position = position_jitter(0.05), alpha = 1 / 2)
+```
+
+### Description Three
+图三，描述了alcohol, citric.acid以及factor以后的quality之间的关系。其中可以看出，
+大部分高质量的红酒都有较高浓度的柠檬酸(citric.acid)以及酒精(alcohol)。
+
+------
+
+# Reflection
+
+自拿到数据集伊始，我就认为11个input变量中一定有会和quality有很大程度的关系。
+没有想到的是，在做双变量分析时，并没有一个变量和红酒质量有强相关性
+(pearson相关系数大于0.6)，这是一个很大的意外。因此我首先探索了和quality变量
+相关性较为明显的alcohol变量。再根据其他变量之间的相关性关系，探索了density,
+citric.acid, pH和fixed.acidity之间的关系。在下一步中，我希望能进一步探索这四个
+变量之间的关系。希望能够建立相关模型，对于新的红酒数据，在知道density, 
+citric.acid和pH之后，能推测出fixed.acidity这个值。
