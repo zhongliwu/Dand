@@ -51,73 +51,122 @@ summary(wine_data)
 上图列出了每一个变量的分布。我可以看到，红酒基本都是酸性(最大pH为4.010)。
 除了density, pH, alcohol, quality这几个变量之外，其他变量都有outlier。
 
-下面，我会画出每一个变量的histogram，以观察每一个变量的分布。
+下面，我会画出每一个变量的histogram，来观察每一个变量的分布。
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-fixed.acidity}
 ggplot(data = wine_data, aes(x = fixed.acidity)) +
     geom_histogram(binwidth = 0.3) +
-    xlab('fixed acidity')
+    xlab('fixed.acidity') +
+    ggtitle('Distribution of fixed.acidity')
 ```
+
+fixed acidity分布，看起来呈现了左偏的状态。
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-volatile.acidity}
 ggplot(data = wine_data, aes(x = volatile.acidity)) +
     geom_histogram(binwidth = 0.03) +
-    xlab('volatile acidity')
+    xlab('volatile.acidity') + 
+    ggtitle('Distribution of volatile.acidity')
 ```
+
+volatile acidity分布，看起来是一个“双峰”，分别出现在volatile.acidity = 0.4和0.6的时候。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-citric.acid}
 ggplot(data = wine_data, aes(x = citric.acid)) +
     geom_histogram(binwidth = 0.02) +
-    xlab('citric acid')
+    xlab('citric.acid') + 
+    ggtitle('Distribution of citric.acid')
 ```
+
+citric.acid分布，大部分的数据其实是为0的。几乎没有多少数据超过了0.5这个值。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-residual.sugar}
 ggplot(data = wine_data, aes(x = residual.sugar)) + 
     geom_histogram(binwidth = 0.5) + 
-    xlab('residual sugar')
+    xlab('residual.sugar') + 
+    ggtitle('Distribution of residual.sugar')
 ```
+
+residual.sugar分布，大部分的数据集中在0 -4这个区间之内。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-chlorides}
 ggplot(data = wine_data, aes(x = chlorides)) + 
     geom_histogram(binwidth = 0.01) + 
-    xlab('chlorides')
+    xlab('chlorides') + 
+    ggtitle('Distribution of chlorides')
 ```
+
+chlorides分布。主要数据呈现近似的正态分布。中位数、均值大约在0.08左右。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-free.sulfur.dioxide}
 ggplot(data = wine_data, aes(x = free.sulfur.dioxide)) + 
     geom_histogram(binwidth = 1) + 
-    xlab('free sulfur dioxide')
+    xlab('free.sulfur.dioxide') + 
+    ggtitle('Distribution of free.sulfur.dioxide')
 ```
+
+free.sulfur.dioxide分布。其主要数据呈现左偏的状态。
+大部分数据的值集中在0 - 10之间。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-total.sulfur.dioxide}
 ggplot(data = wine_data, aes(x = total.sulfur.dioxide)) + 
     geom_histogram(binwidth = 5) + 
-    xlab('total sulfur dioxide')
+    xlab('total.sulfur.dioxide') + 
+    ggtitle('Distribution of total.sulfur.dioxide')
 ```
+
+total.sulfur.dioxide分布。其主要数据呈现左偏的状态。
+大部分数据的值集中在0 - 50之间。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-density}
 ggplot(data = wine_data, aes(x = density)) + 
     geom_histogram(binwidth = 0.0003) + 
-    xlab('density')
+    xlab('density') + 
+    ggtitle('Distribution of density')
 ```
+
+density分布。其呈现了一种近乎于正态分布的状态。同时，density的数据跨度非常密集。
+几乎所有的数据都集中在了0.995 - 1.000之间。从某种程度上来说，这证明了每一种酒的
+密度几乎都差不多。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-pH}
 ggplot(data = wine_data, aes(x = pH)) + 
     geom_histogram(binwidth = 0.03) + 
-    xlab('pH')
+    xlab('pH') + 
+    ggtitle('Distribution of pH')
 ```
+
+pH分布。同density一样，pH也呈现了一种近乎于正态分布的状态，也并没有特别大的
+数据跨度，大部分集中在了3.0 - 3.5之间，极少有超过4.0的。这也证明了红酒几乎
+是酸性的物质，大部分的红酒pH也几乎在同一个级别中。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-sulphates}
 ggplot(data = wine_data, aes(x = sulphates)) + 
     geom_histogram(binwidth = 0.05) + 
-    xlab('sulphates')
+    xlab('sulphates') + 
+    ggtitle('Distribution of sulphates')
 ```
+
+sulphates分布。数据呈现左偏状态。并且数据的跨度集中在0.5 - 1.0之间。
+
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Investigate-alcohol}
 ggplot(data = wine_data, aes(x = alcohol)) + 
     geom_histogram(binwidth = 0.1) + 
-    xlab('alcohol')
+    xlab('alcohol') + 
+    ggtitle('Distribution of alcohol')
 ```
+
+alcohol分布。数据呈现左偏状态，不过，数据的跨度较大，分布在9 - 14之间。这证明了
+不同的红酒之间酒精含量还是不一样的。
 
 
 # Univariate Analysis
@@ -143,6 +192,7 @@ sulphates，我也会研究他们。我想这对于发现红酒质量受什么�
 数据集中有许多左偏的变量，alcohol, sulphates, total.sulfur.dioxide
 and free.sulfur.dioxide这些变量的分布均呈现左偏状态。
 
+
 # Bivariate Plots Section
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Bivariate_Plots}
@@ -151,7 +201,8 @@ corr_main <- cor(select(wine_data, fixed.acidity, volatile.acidity, citric.acid,
             method='pearson')
 corrplot(corr = corr_main, type = 'lower', method = 'circle', 
          order = 'alphabet', addCoef.col = "black", tl.srt = 15,
-         tl.col = 'black')
+         tl.col = 'black', title = 'correlation between each main variables',
+         mar=c(0,0,1,0))
 ```
 
 P(2 - 1), 主要研究变量和quality之间的相关性系数（使用Pearson相关性系数)。
@@ -161,7 +212,8 @@ cor_rest <- cor(select(wine_data, free.sulfur.dioxide, total.sulfur.dioxide,
                    density, pH, quality), method='pearson')
 corrplot(corr = cor_rest, type = 'lower', method = 'circle', 
          order = 'hclust', addCoef.col = "black", tl.srt = 15,
-         tl.col = 'black')
+         tl.col = 'black', title = 'correlation between each other variables',
+         mar=c(0,0,1,0))
 ```
 
 P(2 - 2), 其他变量和quality之间的相关性系数（使用Pearson相关性系数)。
@@ -169,7 +221,9 @@ P(2 - 2), 其他变量和quality之间的相关性系数（使用Pearson相关�
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 corr_free <- cor(select(wine_data, -quality), method='pearson')
 corrplot(corr = corr_free, type = 'lower', method = 'circle', 
-         tl.col = 'black', tl.srt = 15)
+         tl.col = 'black', tl.srt = 15, 
+         title = 'correlation between all variables except quality',
+         mar=c(0,0,1,0))
 ```
 
 P(2 - 3), 除了红酒质量之外，其他所有变量之间的Pearson相关系数。
@@ -186,13 +240,13 @@ P(2 - 3), 除了红酒质量之外，其他所有变量之间的Pearson相关系
 而从P(2 - 3)中可以看到，pH, density and citric.acid这三个变量和fixed.acidity之间
 似乎有较强的相关性。
 
-
 alcohol变量和红酒质量的关系：
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(data = wine_data, aes(x = alcohol, y = quality)) +
   geom_jitter(alpha = 1 / 3) +
-  geom_smooth()
+  geom_smooth(method = 'lm') + 
+  ggtitle('relationship between quality and alcohol')
 ```
 
 P(2 - 4) 酒精含量与红酒质量之间的关系
@@ -202,10 +256,12 @@ P(2 - 4) 酒精含量与红酒质量之间的关系
 
 
 探索citric.acid和红酒质量之间的关系。
+
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(data = wine_data, aes(x = citric.acid, y = quality)) +
   geom_jitter(alpha = 1 / 3) +
-  geom_smooth()
+  geom_smooth(method = 'lm') +
+  ggtitle('relationship between quality and citric.acid')
 ```
 
 P(2 - 5) 柠檬酸含量和红酒质量之间的关系
@@ -246,53 +302,120 @@ corr_citric_fixed
 从上图中可以看到，pH和fixed.acidity之间的相关性最强，绝对值为0.683。他们实际呈
 负线性相关，Pearson's correlation coefficient为-0.683。
 
+
+### 关于酒精含量的大致分布变化
+
+鉴于酒精含量和红酒的质量相关性较大，我希望能看一看酒精含量在不同的红酒质量级别中
+是如何分布的。
+
+```{r}
+# 画出在不同quality levels之下变量alcohol的分布
+
+ggplot(data = wine_data, aes(x = factor(quality), y = alcohol)) + 
+  geom_jitter(alpha = 1 / 10, color = '#EE2233' ) + 
+  geom_boxplot() + 
+  stat_summary(fun.y = 'mean', geom = 'point', color = 'blue') + 
+  xlab('Quality Levels (3 - 8)') + 
+  ylab('Alcohol Content (% by volume)') + 
+  ggtitle('Boxplot of alcohol across qualities')
+```
+
+由此图可以看出，在quality = 5的时候，outlier较多，这同时也会拉高quality的平均数。
+在quality偏低(<=5)时，从中位数和平均数的关系来看，分布几乎都是左偏分布，
+较小的数据比较密集。
+
+从boxplot之间的分布来看，大致上alcohol经历了一增一减。quality从4 - 5的是
+一个减的过程，而从5之后是一个增加的过程。
+
+因此，看起来，简单的相关性系数（0.48）并不能完全反映真实的数据分布。
+
+
 # Multivariate Plots Section
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plots}
-fixed_acidity_color = (wine_data$fixed.acidity - min(wine_data$fixed.acidity)) / 
-    (max(wine_data$fixed.acidity) - min(wine_data$fixed.acidity)) * 255
+首先，我还是从quality和其他变量的一些关系开始探索。
 
+下图展示了pH, fixed acidity以及qulity之间的关系。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, Multivariate_Plots}
 ggplot(data = wine_data, 
-       aes(x = pH, y = density, color = fixed_acidity_color)) + 
-  geom_jitter(alpha = 0.8)
+       aes(x = pH, y = fixed.acidity, color = factor(quality))) + 
+  geom_jitter(alpha = 0.8) +
+  coord_cartesian(xlim = c(3.0, 3.5)) +
+  geom_smooth(method = 'lm') +
+  ylab('Fixed acidity (tartaric acid - g / dm^3)') +
+  xlab('pH') + 
+  ggtitle('P3-1, Relationship between pH, fixed acidity with colored quality')
 ```
 
-P(3 -1) pH, fixed.acidity和citric.acid之间的关系。
+可以看出，不管是哪一种quality，他们的关系都是呈现出负相关性。这和P(2 - 3)表示出
+的相关性关系差不多。
+
+
+接下来，我探索citric acid, alcohol以及quality之间的关系。
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-quality_n <- factor(wine_data$quality)
-ggplot(data = wine_data,aes(x = alcohol, y = citric.acid, color = quality_n)) + 
-  geom_point(position = position_jitter(0.05), alpha = 1 / 2)
+ggplot(data = wine_data, 
+       aes(x = alcohol, y = citric.acid, color = factor(quality))) + 
+  geom_point(position = position_jitter(0.05), alpha = 1 / 2) +
+  coord_cartesian(xlim = c(8.5, 14),
+                  ylim = c(0.0, 0.75)) + 
+  geom_smooth(method = 'lm') +
+  xlab('Alcohol (% by volume)') + 
+  ylab('Citric acid (g / dm^3)') + 
+ggtitle('P3-2, Relationship between citric.acid, alcohol with colored quality')
 ```
 
-P(3 -2) citric, alcohol和quality之间的关系。
+由上图可以看出，在不同的quality之下，alcohol和citric.acid之间的相关性差距较大。
+尽管在双变量探索中，我分析出alcohol和citric.acid之间并没有非常强的相关性关系。
+但是在某些不同的的quality level中，这两者甚至具有非常强大的相关性。
+
+最后，是Alcohol, Density以及quality之间的关系。
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+ggplot(data = wine_data, 
+       aes(y = density, x = alcohol, color = factor(quality))) + 
+  geom_point(position = position_jitter(0.05), alpha = 1 / 2) + 
+  coord_cartesian(ylim = c(0.995, 1.000),
+                  xlim = c(8.5, 14)) + 
+  geom_smooth(method = 'lm') +
+  xlab('Alcohol (% by volume)') + 
+  ylab('Density (g / cm^3)') + 
+ggtitle('P3-3, Relationship between citric.acid, alcohol with colored quality')
+```
+
+上图可知，density和alcohol之间也具有非常强的负相关性。这其实非常奇怪。因为酒精
+含量高，密度反而低了。或许是由于酒精的密度低于水的缘故。
 
 
 # Multivariate Analysis
 
 ### Talk about some of the relationships you observed in this part of the investigation. Were there features that strengthened each other in terms of looking at your feature(s) of interest?
 
-从P(3 - 1)中可以看出，pH和density之间的关联不大，但是density和fixed.acidity
-以及pH和fixed.acidity都呈现了负相关的关系。
+从P3-1和P3-3中可以看出，即便在不同的quality之下，这些变量依然保持比较好的相关性，
+这也印证了双变量探索中的探索。
 
-从P(3 - 2)中可以看出，酒精质量较差的酒大部分集中在图的左下角，
-大部分的alcohol < 10，citric.acid < 0.25。同时，从纵轴上看，citric.acid和
-酒精质量关系并不大，因为各种质量的点在纵轴上均有分布。不过，确实酒精质量较差的点
-在纵轴的底部分布较多。
 
 ### Were there any interesting or surprising interactions between features?
 
-从P(3 - 1)中可以看出，尽管density和pH之间几乎没有任何相关性，但是数据大部分
-集中在图中间部分。由此可以看出，大部分红酒的pH和density几乎都是类似的。
+图P3-2是展示了一种非常意外的情况。事实上，alcohol和citric.acid本身的相关性系数并
+不高。但是，根据不同的quality levels划分之后，图中显示他们在某些quality levels
+之下却有这非常强的相关性。
 
 
 # Final Plots and Summary
 
+根据以上探索结果，我可以画出以下三幅图来作为总结。
+
 ### Plot One
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_One}
-ggplot(data = wine_data, aes(x = alcohol, y = quality)) +
-  geom_jitter(alpha = 1 / 3) +
-  geom_smooth()
+# quality和alcohol之间的关系
+
+ggplot(data = wine_data, aes(x = alcohol, y = quality)) + 
+  geom_jitter(alpha = 1 / 3) + 
+  geom_smooth(method = 'lm') + 
+  xlab('Alcohol (% by volume)') + 
+  ylab('Quality') + 
+  ggtitle('F.1 - Relationship between quality and alcohol')
 ```
 
 ### Description One
@@ -303,7 +426,9 @@ ggplot(data = wine_data, aes(x = alcohol, y = quality)) +
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Two}
 corr_free <- cor(select(wine_data, -quality), method='pearson')
 corrplot(corr = corr_free, type = 'lower', method = 'circle', 
-         tl.col = 'black', tl.srt = 15)
+         tl.col = 'black', tl.srt = 15,
+         title = 'F.2 - Correlation between all variables except quality',
+         mar=c(0,0,1,0))
 ```
 
 ### Description Two
@@ -313,14 +438,20 @@ pH - fixed.acidity, density - fixed.acidity, citric.acid - fixed.acidity这三�
 
 ### Plot Three
 ```{r echo=FALSE, message=FALSE, warning=FALSE, Plot_Three}
-quality_n <- factor(wine_data$quality)
-ggplot(data = wine_data,aes(x = alcohol, y = citric.acid, color = quality_n)) + 
-  geom_point(position = position_jitter(0.05), alpha = 1 / 2)
+ggplot(data = wine_data, 
+       aes(x = alcohol, y = citric.acid, color = factor(quality))) + 
+  geom_point(position = position_jitter(0.05), alpha = 1 / 2) +
+  coord_cartesian(xlim = c(8.5, 14),
+                  ylim = c(0.0, 0.75)) + 
+  geom_smooth(method = 'lm') +
+  xlab('Alcohol (% by volume)') + 
+  ylab('Citric acid (g / dm^3)') + 
+ggtitle('F.3 - Relationship between citric.acid, alcohol with colored quality')
 ```
 
 ### Description Three
-图三，描述了alcohol, citric.acid以及factor以后的quality之间的关系。其中可以看出，
-大部分高质量的红酒都有较高浓度的柠檬酸(citric.acid)以及酒精(alcohol)。
+图三，描述了alcohol, citric.acid在不同quality层面之间的关系。其中可以看出，
+在quality为5的时候，两者之间的相关性程度最高。
 
 ------
 
@@ -328,8 +459,17 @@ ggplot(data = wine_data,aes(x = alcohol, y = citric.acid, color = quality_n)) +
 
 自拿到数据集伊始，我就认为11个input变量中一定有会和quality有很大程度的关系。
 没有想到的是，在做双变量分析时，并没有一个变量和红酒质量有强相关性
-(pearson相关系数大于0.6)，这是一个很大的意外。因此我首先探索了和quality变量
-相关性较为明显的alcohol变量。再根据其他变量之间的相关性关系，探索了density,
-citric.acid, pH和fixed.acidity之间的关系。在下一步中，我希望能进一步探索这四个
-变量之间的关系。希望能够建立相关模型，对于新的红酒数据，在知道density, 
-citric.acid和pH之后，能推测出fixed.acidity这个值。
+(pearson相关系数大于0.6)，这是一个很大的shock。
+
+因此我首先探索了和quality变量相关性较为明显的alcohol变量。同时，我看到了pH和
+fixed.acidity，以及alcohol和citric.acid之间的一种比较强大的相关性，因此我选择了
+观察他们之间的关系。而根据不同的quality质量变化，我又发现了在不同的quality level
+之下，alcohol - citric.acid之间或许存在某种潜在的相关性。
+
+对于F.3这张图，需要考察在不同quality中这两个变量是否真的存在这种关系，如果存在
+这种关系，也需要考察这种关系的前因后果。究竟这样的负相关，只是一种数据上的巧合，
+还是一种潜在的客观存在的关系。
+
+在下一步中，我希望能进一步探索这四个变量之间的关系。希望能够建立相关模型，
+对于新的红酒数据，在知道density, citric.acid和pH之后，
+能推测出fixed.acidity这个值。
