@@ -1,2 +1,2 @@
-# Dand_Udacity
-Udacity Dand Project
+# Dand - Data Analysis Nano Degree
+Udacity Data Analysis Project
